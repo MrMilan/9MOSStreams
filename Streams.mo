@@ -63,4 +63,29 @@ package Steramz
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})));
   end Model1;
 
+  model tank
+    constant Real roLiquid = 1000;
+    constant Real gravit = 10;
+    parameter Real areaBase = 1;
+    parameter Real initVolume = 10;
+    parameter Real initConc = 10;
+    Real volume;
+    Real soluteMass;
+    pqscon pqIn annotation(Placement(visible = true, transformation(origin = {-88, -64}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-88, -64}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    pqscon pqOut annotation(Placement(visible = true, transformation(origin = {92, -66}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {88, -62}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Modelica.Blocks.Interfaces.RealOutput height annotation(Placement(visible = true, transformation(origin = {84, 84}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {80, 78}, extent = {{-22, -22}, {22, 22}}, rotation = 0)));
+  initial equation
+    volume = initVolume;
+    pqIn.c = initConc;
+  equation
+    roLiquid * gravit * height = pqIn.p;
+    pqIn.p = (volume - initVolume) / height;
+    pqIn.p = pqOut.p;
+    pqIn.c = soluteMass / volume;
+    pqIn.c = pqOut.c;
+    der(volume) = pqIn.q + pqOut.q;
+    volume = height * areaBase;
+    der(soluteMass) = pqIn.q * actualStream(pqIn.c) + pqIn.q * actualStream(pqIn.c);
+    annotation(Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2}), graphics = {Rectangle(origin = {-6, 10}, fillColor = {0, 85, 255}, fillPattern = FillPattern.Horizontal, extent = {{-60, 70}, {64, -58}}), Text(origin = {1, -68}, extent = {{-65, -24}, {65, 24}}, textString = "%name")}));
+  end tank;
 end Steramz;
