@@ -17,10 +17,10 @@ package Steramz
   end Psrc;
 
   model Resist
-    Steramz.pqscon pqscon1 annotation(Placement(visible = true, transformation(origin = {-80, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-80, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     Steramz.pqscon pqscon2 annotation(Placement(visible = true, transformation(origin = {100, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {100, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    parameter Real R;
-    parameter Real L;
+    parameter Real R = 1;
+    parameter Real L = 1;
+    Steramz.pqscon pqscon1 annotation(Placement(visible = true, transformation(origin = {-80, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-98, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   equation
     if L > 0 then
       pqscon1.p - pqscon2.p = R * pqscon1.q + L * der(pqscon1.q);
@@ -30,17 +30,17 @@ package Steramz
     pqscon1.q + pqscon2.q = 0;
     inStream(pqscon1.c) = pqscon2.c;
     inStream(pqscon2.c) = pqscon1.c;
-    annotation(Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2}), graphics = {Rectangle(origin = {1.87, 11.21}, fillColor = {141, 57, 49}, fillPattern = FillPattern.Solid, extent = {{-89.1, 40.5}, {89.1, -40.5}})}));
+    annotation(Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2}), graphics = {Rectangle(origin = {1.87, 11.21}, fillColor = {141, 57, 49}, fillPattern = FillPattern.Solid, extent = {{-89.1, 40.5}, {89.1, -40.5}}), Text(origin = {-8, -72}, extent = {{-90, 18}, {90, -18}}, textString = "R=%R  L=%L")}));
   end Resist;
 
   model Sens
-    Steramz.pqscon pqscon1 annotation(Placement(visible = true, transformation(origin = {0, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     Real c;
+    Steramz.pqscon pqscon1 annotation(Placement(visible = true, transformation(origin = {0, -80}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -78}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   equation
     pqscon1.q = 0;
     pqscon1.c = 0;
     c = inStream(pqscon1.c);
-    annotation(Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2}), graphics = {Rectangle(origin = {-2.18, 46.42}, fillPattern = FillPattern.Solid, extent = {{-75.08, 35.2}, {75.08, -35.2}}), Polygon(origin = {-18.65, 5.82}, fillPattern = FillPattern.Solid, points = {{8.68087, -100.527}, {69.117, 27.822}, {-33.0637, 27.822}, {8.68087, -100.527}})}));
+    annotation(Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2}), graphics = {Rectangle(origin = {-2.18, 46.42}, fillPattern = FillPattern.Solid, extent = {{-75.08, 35.2}, {75.08, -35.2}}), Polygon(origin = {-18.65, 5.82}, fillPattern = FillPattern.Solid, points = {{18.6809, -76.527}, {69.117, 27.822}, {-33.0637, 27.822}, {18.6809, -76.527}})}));
   end Sens;
 
   model Model1
@@ -71,21 +71,35 @@ package Steramz
     parameter Real initConc = 10;
     Real volume;
     Real soluteMass;
+    Real height;
     pqscon pqIn annotation(Placement(visible = true, transformation(origin = {-88, -64}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-88, -64}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     pqscon pqOut annotation(Placement(visible = true, transformation(origin = {92, -66}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {88, -62}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Interfaces.RealOutput height annotation(Placement(visible = true, transformation(origin = {84, 84}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {80, 78}, extent = {{-22, -22}, {22, 22}}, rotation = 0)));
   initial equation
     volume = initVolume;
     pqIn.c = initConc;
   equation
     roLiquid * gravit * height = pqIn.p;
-    pqIn.p = (volume - initVolume) / height;
     pqIn.p = pqOut.p;
     pqIn.c = soluteMass / volume;
     pqIn.c = pqOut.c;
     der(volume) = pqIn.q + pqOut.q;
     volume = height * areaBase;
     der(soluteMass) = pqIn.q * actualStream(pqIn.c) + pqIn.q * actualStream(pqIn.c);
-    annotation(Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2}), graphics = {Rectangle(origin = {-6, 10}, fillColor = {0, 85, 255}, fillPattern = FillPattern.Horizontal, extent = {{-60, 70}, {64, -58}}), Text(origin = {1, -68}, extent = {{-65, -24}, {65, 24}}, textString = "%name")}));
+    annotation(Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2}), graphics = {Rectangle(origin = {-6, 10}, fillColor = {0, 85, 255}, fillPattern = FillPattern.Horizontal, extent = {{-62, 52}, {64, -58}}), Text(origin = {1, -68}, extent = {{-65, -24}, {65, 24}}, textString = "%name"), Text(origin = {-77, 86}, extent = {{-23, -14}, {175, 12}}, textString = "S =%areaBase  initVolume = %initVolume
+  initConc =%initConc")}));
   end tank;
+
+  model twoTank
+    tank tank1 annotation(Placement(visible = true, transformation(origin = {-71, -1}, extent = {{-29, -29}, {29, 29}}, rotation = 0)));
+    Sens sens1 annotation(Placement(visible = true, transformation(origin = {-20, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Sens sens2 annotation(Placement(visible = true, transformation(origin = {20, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    Resist resist1 annotation(Placement(visible = true, transformation(origin = {2, 14}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    tank tank2(initVolume = 5, initConc = 0) annotation(Placement(visible = true, transformation(origin = {68, -2}, extent = {{-32, -32}, {32, 32}}, rotation = 0)));
+  equation
+    connect(resist1.pqscon2, tank2.pqIn) annotation(Line(points = {{12, 16}, {40, 16}, {40, -22}}));
+    connect(sens2.pqscon1, resist1.pqscon2) annotation(Line(points = {{20, 64}, {20, 16}, {12, 16}}));
+    connect(tank1.pqOut, resist1.pqscon1) annotation(Line(points = {{-45, -19}, {-26, -19}, {-26, 16}, {-6, 16}}));
+    connect(sens1.pqscon1, resist1.pqscon1) annotation(Line(points = {{-20, 64}, {-20, 16}, {-6, 16}}));
+    annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})));
+  end twoTank;
 end Steramz;
