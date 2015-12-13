@@ -92,14 +92,14 @@ package Steramz
   model twoTank
     tank tank1 annotation(Placement(visible = true, transformation(origin = {-71, -1}, extent = {{-29, -29}, {29, 29}}, rotation = 0)));
     Sens sens1 annotation(Placement(visible = true, transformation(origin = {-20, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Sens sens2 annotation(Placement(visible = true, transformation(origin = {20, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Resist resist1 annotation(Placement(visible = true, transformation(origin = {2, 14}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     tank tank2(initVolume = 5, initConc = 0) annotation(Placement(visible = true, transformation(origin = {68, -2}, extent = {{-32, -32}, {32, 32}}, rotation = 0)));
+    Resist resist1 annotation(Placement(visible = true, transformation(origin = {-2, -1.77636e-15}, extent = {{-18, -18}, {18, 18}}, rotation = 0)));
+    Sens sens2 annotation(Placement(visible = true, transformation(origin = {16, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   equation
-    connect(resist1.pqscon2, tank2.pqIn) annotation(Line(points = {{12, 16}, {40, 16}, {40, -22}}));
-    connect(sens2.pqscon1, resist1.pqscon2) annotation(Line(points = {{20, 64}, {20, 16}, {12, 16}}));
-    connect(tank1.pqOut, resist1.pqscon1) annotation(Line(points = {{-45, -19}, {-26, -19}, {-26, 16}, {-6, 16}}));
-    connect(sens1.pqscon1, resist1.pqscon1) annotation(Line(points = {{-20, 64}, {-20, 16}, {-6, 16}}));
+    connect(sens2.pqscon1, resist1.pqscon2) annotation(Line(points = {{16, 64}, {16, 4}}));
+    connect(tank2.pqIn, resist1.pqscon2) annotation(Line(points = {{40, -22}, {24, -22}, {24, 4}, {16, 4}}));
+    connect(sens1.pqscon1, resist1.pqscon1) annotation(Line(points = {{-20, 64}, {-20, 4}}));
+    connect(tank1.pqOut, resist1.pqscon1) annotation(Line(points = {{-45, -19}, {-26, -19}, {-26, 4}, {-20, 4}}));
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})));
   end twoTank;
 end Steramz;
