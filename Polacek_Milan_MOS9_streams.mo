@@ -84,7 +84,7 @@ package Steramz
     pqIn.c = pqOut.c;
     der(volume) = pqIn.q + pqOut.q;
     volume = height * areaBase;
-    der(soluteMass) = pqIn.q * actualStream(pqIn.c) + pqIn.q * actualStream(pqIn.c);
+    der(soluteMass) = pqIn.q * actualStream(pqIn.c) + pqOut.q * actualStream(pqOut.c);
     annotation(Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2})), Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {2, 2}), graphics = {Rectangle(origin = {-6, 10}, fillColor = {0, 85, 255}, fillPattern = FillPattern.Horizontal, extent = {{-62, 52}, {64, -58}}), Text(origin = {1, -68}, extent = {{-65, -24}, {65, 24}}, textString = "%name"), Text(origin = {-77, 86}, extent = {{-23, -14}, {175, 12}}, textString = "S =%areaBase  initVolume = %initVolume
   initConc =%initConc")}));
   end tank;
